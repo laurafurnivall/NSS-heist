@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Heist
 {
@@ -9,6 +8,13 @@ namespace Heist
         static void Main(string[] args)
         {
             Console.WriteLine("Plan Your Heist!");
+
+            Bank bank = new Bank();
+            Console.WriteLine("What would you like your banks difficulty level to be?");
+            string bankDifficulty = Console.ReadLine();
+            int bankDifficultyNum = int.Parse(bankDifficulty);
+            bank.DifficultyLevel = bankDifficultyNum;
+
             Console.WriteLine("Time to add your Team Members!");
             Group heistGroup = new Group();
 
@@ -50,36 +56,42 @@ namespace Heist
                 }
             }
 
-            // void TeamRoster(Group heistGroup)
-            // {
-            //     int count = heistGroup.heistGroup.Count;
-            //     Console.WriteLine($"You have {count} members in your group.");
-            //     foreach (KeyValuePair<string, TeamMember> member in heistGroup.heistGroup)
-            //     {
-            //         Console.WriteLine($"{member.Value.Name} has a skill level of {member.Value.SkillLevel} and a courage factor of {member.Value.CourageFactor}.");
-            //     }
-            // }
+            Console.WriteLine("How many times would you like to attempt the heist?");
+            string heistAttempts = Console.ReadLine();
+            int hesitAttemptsNum = int.Parse(heistAttempts);
 
-            // TeamRoster(heistGroup);
+            for (int i = 1; i <= hesitAttemptsNum; i++)
+            {
+                void RunBankHeist()
+                {
+                    Random random = new Random();
+                    int luckLevel = random.Next(-10, 11);
+                    int teamSkillLevel = 0;
 
-            Bank bank = new Bank();
-            // int teamSkillLevel;
+                    foreach (KeyValuePair<string, TeamMember> member in heistGroup.heistGroup)
+                    {
+                        teamSkillLevel += member.Value.SkillLevel;
+                    }
 
-            // foreach (KeyValuePair<string, TeamMember> member in heistGroup.heistGroup)
-            // {
-            //     int teamSkillLevel = +member.Value.SkillLevel;
-            // }
+                    Console.WriteLine($"Your teams skill level is: {teamSkillLevel}");
+                    Console.WriteLine($"And the banks difficulty level is: {bank.DifficultyLevel + luckLevel}");
+                    if (teamSkillLevel >= bank.DifficultyLevel + luckLevel)
+                    {
+                        Console.WriteLine("\t Success! You robbed the bank!");
+                        bank.successRuns += 1;
+                    }
+                    else if (teamSkillLevel < bank.DifficultyLevel + luckLevel)
+                    {
+                        Console.WriteLine("\t Oh no! You were caught!");
+                        bank.failedRuns += 1;
+                    }
 
-            // Console.WriteLine($"{teamSkillLevel}");
-            // if (teamSkillLevel >= bank.DifficultyLevel)
-            // {
-            //     Console.WriteLine("Success");
-            // }
-            // else if (teamSkillLevel < bank.DifficultyLevel)
-            // {
-            //     Console.WriteLine("Failure");
-            // }
+                    Console.WriteLine();
+                    Console.WriteLine($"You robbed the bank successfully {bank.successRuns} times, and failed {bank.failedRuns} times.");
+                }
 
+                RunBankHeist();
+            }
         }
     }
 }
